@@ -18,7 +18,7 @@ commentaryRouter.get("/", async (req, res) => {
   if (!paramsParsed.success) {
     return res.status(400).json({
       error: "Invalid match ID parameter.",
-      details: JSON.stringify(paramsParsed.error.issues),
+      details: paramsParsed.error.issues,
     });
   }
 
@@ -27,7 +27,7 @@ commentaryRouter.get("/", async (req, res) => {
   if (!queryParsed.success) {
     return res.status(400).json({
       error: "Invalid query.",
-      details: JSON.stringify(queryParsed.error.issues),
+      details: queryParsed.error.issues,
     });
   }
 
@@ -57,7 +57,7 @@ commentaryRouter.post("/", async (req, res) => {
   if (!paramsParsed.success) {
     return res.status(400).json({
       error: "Invalid match ID parameter.",
-      details: JSON.stringify(paramsParsed.error.issues),
+      details: paramsParsed.error.issues,
     });
   }
 
@@ -66,7 +66,7 @@ commentaryRouter.post("/", async (req, res) => {
   if (!bodyParsed.success) {
     return res.status(400).json({
       error: "Invalid commentary data.",
-      details: JSON.stringify(bodyParsed.error.issues),
+      details: bodyParsed.error.issues,
     });
   }
 
@@ -84,6 +84,12 @@ commentaryRouter.post("/", async (req, res) => {
 
     res.status(201).json({ data: result });
   } catch (error) {
+    if (error.code === "23503") {
+      console.error("Referenced match does not exist.");
+      return res
+        .status(400)
+        .json({ error: "Referenced match does not exist." });
+    }
     console.error("Failed to create commentary:", error);
     res.status(500).json({ error: "Failed to create commentary." });
   }
