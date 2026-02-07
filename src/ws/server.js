@@ -17,8 +17,7 @@ const broadcast = (wss, payload) => {
 
 export const attachWebSocketServer = (server) => {
   const wss = new WebSocketServer({
-    server,
-    path: "/ws",
+    noServer: true,
     maxPayload: 1024 * 1024,
   });
 
@@ -53,9 +52,9 @@ export const attachWebSocketServer = (server) => {
     wss.handleUpgrade(req, socket, head, (ws) => {
       wss.emit("connection", ws, req);
     });
-  })
+  });
 
-  wss.on("connection", async (socket, req) => {
+  wss.on("connection", (socket, req) => {
     socket.isAlive = true;
     socket.on("pong", () => {
       socket.isAlive = true;
