@@ -78,20 +78,13 @@ commentaryRouter.post("/", async (req, res) => {
       .insert(commentary)
       .values({
         matchId,
-        minute: commentaryData.minute,
-        sequence: commentaryData.sequence,
-        period: commentaryData.period,
-        eventType: commentaryData.eventType,
-        actor: commentaryData.actor,
-        team: commentaryData.team,
-        message: commentaryData.message,
-        metadata: commentaryData.metadata,
-        tags: commentaryData.tags,
+        ...commentaryData,
       })
       .returning();
 
     res.status(201).json({ data: result });
   } catch (error) {
+    console.error("Failed to create commentary:", error);
     res.status(500).json({ error: "Failed to create commentary." });
   }
 });
